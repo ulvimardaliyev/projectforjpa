@@ -1,5 +1,6 @@
 package az.projects.projectforjpa.controller;
 
+import az.projects.projectforjpa.dao.entity.Course;
 import az.projects.projectforjpa.dto.requestdto.CourseRequestDto;
 import az.projects.projectforjpa.dto.responsedto.CourseResponseDto;
 import az.projects.projectforjpa.service.ProjectForJpaService;
@@ -28,8 +29,8 @@ public class CourseController {
     }
 
     @GetMapping("/students/{id}/courses")
-    public CourseResponseDto courseResponseDto(@PathVariable long id) {
-        return service.getCourseById(id);
+    public List<CourseResponseDto> courseResponseDto(@PathVariable long id) {
+        return service.getCourseResponseDto(id);
     }
 
     //delete course

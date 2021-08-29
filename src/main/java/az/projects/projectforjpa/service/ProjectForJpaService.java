@@ -16,7 +16,7 @@ public interface ProjectForJpaService {
 
     StudentResponseDto getStudentById(long id);
 
-    CourseResponseDto getCourseById(long id);
+    List<CourseResponseDto> getCourseResponseDto(long id);
 
     long saveStudent(StudentRequestDto studentRequestDto);
 

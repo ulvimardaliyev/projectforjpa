@@ -68,16 +68,20 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
     }
 
     @Override
-    public CourseResponseDto getCourseById(long id) {
-        var courseById = courseRepository.findById(id);
-        CourseResponseDto courseResponseDto =
-                CourseResponseDto
-                        .builder()
-                        .courseName(courseById.get().getCourseName())
-                        .id(courseById.get().getId())
-                        .student(courseById.get().getStudent())
-                        .build();
-        return courseResponseDto;
+    public List<CourseResponseDto> getCourseResponseDto(long id) {
+        var studentById = studentRepository.findById(id).get();
+        var listOfStudentCoursesById = studentById.getCourse();
+        var listOfStudentCourses = new ArrayList<CourseResponseDto>();
+        for (Course course : listOfStudentCoursesById) {
+            listOfStudentCourses.add(
+                    CourseResponseDto
+                            .builder()
+                            .courseName(course.getCourseName())
+                            .student(course.getStudent())
+                            .id(course.getId())
+                            .build());
+        }
+        return listOfStudentCourses;
     }
 
     @Override
