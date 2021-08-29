@@ -24,5 +24,9 @@ public interface ProjectForJpaService {
 
     void deleteStudent(long id);
 
-     long saveCourse(CourseRequestDto courseRequestDto, Long id);
+    long saveCourse(CourseRequestDto courseRequestDto, Long id);
+
+    //think again for return type of this abstract method
+    List<CourseResponseDto> deleteCourseWithId(long studentId, long courseId);
+
 }

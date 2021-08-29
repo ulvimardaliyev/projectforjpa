@@ -1,6 +1,5 @@
 package az.projects.projectforjpa.controller;
 
-import az.projects.projectforjpa.dao.entity.Course;
 import az.projects.projectforjpa.dto.requestdto.CourseRequestDto;
 import az.projects.projectforjpa.dto.responsedto.CourseResponseDto;
 import az.projects.projectforjpa.service.ProjectForJpaService;
@@ -38,5 +37,13 @@ public class CourseController {
     public void deleteCourse(@PathVariable long id) {
         service.deleteCourse(id);
     }
-    //delete specified course of specified student /students/{id}/courses/{id}
+
+
+    // correct this controller, because I do not know how to save after deleting chosen (by id) course
+    // action : delete specified course of specified student /students/{id}/courses/{id}
+    @DeleteMapping("/students/{studentId}/courses/{courseId}")
+    public List<CourseResponseDto> deleteCourseWithId(@PathVariable long studentId,
+                                                      @PathVariable long courseId){
+        return service.deleteCourseWithId(studentId, courseId);
+    }
 }
