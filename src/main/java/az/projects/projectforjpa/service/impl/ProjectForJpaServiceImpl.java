@@ -109,8 +109,9 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
 
     //action needs
     @Override
-    public List<CourseResponseDto> deleteCourseWithId(long studentId, long courseId) {
-        return null;
+    public void deleteCourseWithId(long studentId, long courseId) {
+        var studentEntity = studentRepository.findById(studentId).get();
+        courseRepository.deleteByStudentAndId(studentEntity, courseId);
     }
 
     @Override

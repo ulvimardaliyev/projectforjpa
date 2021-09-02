@@ -25,4 +25,10 @@ public class Student {
     @OneToMany(mappedBy = "student")
     @JsonIgnore
     private List<Course> course;
+    @ManyToMany
+    @JoinTable(name = "Student_Teacher",
+            joinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id")
+    )
+    private List<Teacher> teachers;
 }
