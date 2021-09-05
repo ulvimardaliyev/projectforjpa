@@ -1,12 +1,14 @@
 package az.projects.projectforjpa.dto.requestdto;
 
 import az.projects.projectforjpa.dao.entity.Course;
+import az.projects.projectforjpa.dao.entity.Teacher;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,4 +17,5 @@ public class StudentRequestDto {
     private String studentName;
     private int age;
     private List<Course> course;
+    private List<Teacher> teacher;
 }

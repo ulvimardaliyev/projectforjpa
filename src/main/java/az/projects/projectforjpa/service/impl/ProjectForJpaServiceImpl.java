@@ -2,12 +2,16 @@ package az.projects.projectforjpa.service.impl;
 
 import az.projects.projectforjpa.dao.entity.Course;
 import az.projects.projectforjpa.dao.entity.Student;
+import az.projects.projectforjpa.dao.entity.Teacher;
 import az.projects.projectforjpa.dao.repository.CourseRepository;
 import az.projects.projectforjpa.dao.repository.StudentRepository;
+import az.projects.projectforjpa.dao.repository.TeacherRepository;
 import az.projects.projectforjpa.dto.requestdto.CourseRequestDto;
 import az.projects.projectforjpa.dto.requestdto.StudentRequestDto;
+import az.projects.projectforjpa.dto.requestdto.TeacherRequestDto;
 import az.projects.projectforjpa.dto.responsedto.CourseResponseDto;
 import az.projects.projectforjpa.dto.responsedto.StudentResponseDto;
+import az.projects.projectforjpa.dto.responsedto.TeacherResponseDto;
 import az.projects.projectforjpa.service.ProjectForJpaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
 
     private final CourseRepository courseRepository;
     private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
 
     @Override
     public List<CourseResponseDto> getAllCourses() {
@@ -112,6 +117,58 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
     public void deleteCourseWithId(long studentId, long courseId) {
         var studentEntity = studentRepository.findById(studentId).get();
         courseRepository.deleteByStudentAndId(studentEntity, courseId);
+    }
+
+    @Override
+    public long saveTeacher(TeacherRequestDto teacherRequestDto) {
+        Teacher newTeacher = Teacher
+                .builder()
+                .age(teacherRequestDto.getAge())
+                .name(teacherRequestDto.getName())
+                .surname(teacherRequestDto.getSurname())
+                .students(teacherRequestDto.getStudents())
+                .build();
+        var id = teacherRepository.save(newTeacher).getId();
+        return  id;
+    }
+
+    @Override
+    public void deleteTeacher(long id) {
+        teacherRepository.deleteById(id);
+    }
+
+    @Override
+    public List<TeacherResponseDto> getAllTeacher() {
+        var allTeachers = teacherRepository.findAll();
+        List<TeacherResponseDto> list = new ArrayList<>();
+
+        for (Teacher teachers : allTeachers) {
+            list.add(TeacherResponseDto
+                    .builder()
+                    .id(teachers.getId())
+                    .age(teachers.getAge())
+                    .name(teachers.getName())
+                    .surname(teachers.getSurname())
+                    .students(teachers.getStudents())
+                    .build()
+            );
+        }
+        return list;
+    }
+
+    @Override
+    public TeacherResponseDto getTeacherById(long id) {
+        var teacherById = teacherRepository.findById(id).get();
+        TeacherResponseDto teacherResponseDto =
+                TeacherResponseDto
+                        .builder()
+                        .id(teacherById.getId())
+                        .name(teacherById.getName())
+                        .surname(teacherById.getSurname())
+                        .age(teacherById.getAge())
+                        .students(teacherById.getStudents())
+                        .build();
+        return teacherResponseDto;
     }
 
     @Override

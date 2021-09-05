@@ -13,6 +13,7 @@ import java.util.List;
 @Builder
 public class TeacherResponseDto {
 
+    private long id;
     private String name;
     private String surname;
     private int age;
