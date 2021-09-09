@@ -15,6 +15,7 @@ import az.projects.projectforjpa.dto.responsedto.TeacherResponseDto;
 import az.projects.projectforjpa.service.ProjectForJpaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,12 +53,13 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
                     .id(student.getId())
                     .studentName(student.getStudentName())
                     .course(student.getCourse())
+                    .teacher(student.getTeachers())
                     .build());
         }
         return studentResponseDto;
     }
 
-    //Sehv isleyir duzelt
+    //Updated, works correctly
     @Override
     public StudentResponseDto getStudentById(long id) {
         var studentById = studentRepository.findById(id);
@@ -68,6 +70,7 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
                         .age(studentById.get().getAge())
                         .studentName(studentById.get().getStudentName())
                         .course(studentById.get().getCourse())
+                        .teacher(studentById.get().getTeachers())
                         .build();
         return studentResponseDto;
     }
@@ -89,6 +92,7 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
         return listOfStudentCourses;
     }
 
+    @Transactional
     @Override
     public long saveStudent(StudentRequestDto studentRequestDto) {
         Student student = Student.builder()
@@ -96,7 +100,10 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
                 .age(studentRequestDto.getAge())
                 .course(studentRequestDto.getCourse())
                 .build();
-        return studentRepository.save(student).getId();
+
+        long id = studentRepository.save(student).getId();
+        student.setStudentName("Khalid");
+        return id;
     }
 
     @Override
@@ -129,7 +136,7 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
                 .students(teacherRequestDto.getStudents())
                 .build();
         var id = teacherRepository.save(newTeacher).getId();
-        return  id;
+        return id;
     }
 
     @Override
@@ -172,6 +179,21 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
     }
 
     @Override
+    public Student addTeacherById(long teacherId, long studentId) {
+        var student = studentRepository.findById(studentId).get();
+        var teacher = teacherRepository.findById(teacherId).get();
+
+        student.getTeachers().add(teacher);
+        //studentRepository.save(student);
+        return studentRepository.save(student);
+    }
+
+    @Override
+    public TeacherResponseDto addStudentById(long teacherId, long studentId) {
+        return null;
+    }
+
+    @Override
     public void deleteStudent(long id) {
         var entity = studentRepository.findById(id);
         var listOfCoursesForThisStudent = entity.get().getCourse();
@@ -187,4 +209,5 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
     public void deleteCourse(long id) {
         courseRepository.delete(courseRepository.findById(id).get());
     }
+
 }

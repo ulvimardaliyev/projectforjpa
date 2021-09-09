@@ -1,5 +1,7 @@
 package az.projects.projectforjpa.service;
 
+import az.projects.projectforjpa.dao.entity.Student;
+import az.projects.projectforjpa.dao.entity.Teacher;
 import az.projects.projectforjpa.dto.requestdto.CourseRequestDto;
 import az.projects.projectforjpa.dto.requestdto.StudentRequestDto;
 import az.projects.projectforjpa.dto.requestdto.TeacherRequestDto;
@@ -38,4 +40,9 @@ public interface ProjectForJpaService {
     List<TeacherResponseDto> getAllTeacher();
 
     TeacherResponseDto getTeacherById(long id);
+
+    //add teacher to student
+    Student addTeacherById(long teacherId, long studentId);
+    //add student to teacher
+    TeacherResponseDto addStudentById(long teacherId, long studentId);
 }

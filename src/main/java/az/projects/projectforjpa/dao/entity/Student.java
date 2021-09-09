@@ -1,6 +1,8 @@
 package az.projects.projectforjpa.dao.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,8 @@ public class Student {
     @OneToMany(mappedBy = "student")
     @JsonIgnore
     private List<Course> course;
-    @ManyToMany
+
+    @ManyToMany(fetch=FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Student_Teacher",
             joinColumns = @JoinColumn(name = "student_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "teacher_id", referencedColumnName = "id")
