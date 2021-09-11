@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class ProjectForJpaServiceImpl implements ProjectForJpaService {
@@ -139,8 +140,16 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
         return id;
     }
 
+    //deletes teachers from Student firstly, then Teacher itself
     @Override
     public void deleteTeacher(long id) {
+        var teacherById = teacherRepository.findById(id);
+        List<Student> studentsOfTeacher = teacherById.get().getStudents();
+
+        for (Student students : studentsOfTeacher) {
+            students.getTeachers().remove((int) id - 1);
+            studentRepository.save(students);
+        }
         teacherRepository.deleteById(id);
     }
 
