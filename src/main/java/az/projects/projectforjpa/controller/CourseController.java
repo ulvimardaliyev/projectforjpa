@@ -15,35 +15,41 @@ public class CourseController {
 
     private final ProjectForJpaService service;
 
-    @GetMapping("/students/courses")
+    @GetMapping("/courses")
     public List<CourseResponseDto> getAllCourses() {
         return service.getAllCourses();
     }
 
 
-    @PostMapping("/students/{id}/courses")
-    public long saveCourse(@RequestBody CourseRequestDto courseRequestDto,
-                           @PathVariable Long id) {
-        return service.saveCourse(courseRequestDto, id);
+    @PostMapping("/courses")
+    public long saveCourse(@RequestBody CourseRequestDto courseRequestDto) {
+        return service.saveCourse(courseRequestDto);
     }
 
-    @GetMapping("/students/{id}/courses")
-    public List<CourseResponseDto> courseResponseDto(@PathVariable long id) {
-        return service.getCourseResponseDto(id);
+    @GetMapping("/courses/{courseId}")
+    public CourseResponseDto courseResponseDto(@PathVariable long courseId) {
+        return service.getCourseResponseDto(courseId);
     }
 
     //delete course
-    @DeleteMapping("/students/courses/{id}")
-    public void deleteCourse(@PathVariable long id) {
-        service.deleteCourse(id);
+    @DeleteMapping("/courses/{courseId}")
+    public void deleteCourse(@PathVariable long courseId) {
+        service.deleteCourse(courseId);
     }
 
+    @PutMapping("/students/{studentId}/courses/{courseId}")
+    public CourseResponseDto addCourseToStudent(@PathVariable long studentId,
+                                                @PathVariable long courseId) {
+        return service.addCourseToStudent(studentId, courseId);
+    }
 
-    // correct this controller, because I do not know how to save after deleting chosen (by id) course
-    // action : delete specified course of specified student /students/{id}/courses/{id}
+    /**
+     * TODO correct this controller, because I do not know how to save after deleting chosen (by id) course
+     * TODO action : delete specified course of specified student /students/{id}/courses/{id}
+     */
     @DeleteMapping("/students/{studentId}/courses/{courseId}")
     public void deleteCourseWithId(@PathVariable long studentId,
-                                                      @PathVariable long courseId){
-         service.deleteCourseWithId(studentId, courseId);
+                                   @PathVariable long courseId) {
+        service.deleteCourseWithId(studentId, courseId);
     }
 }

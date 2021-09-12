@@ -77,21 +77,16 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
     }
 
     @Override
-    public List<CourseResponseDto> getCourseResponseDto(long id) {
-        var studentById = studentRepository.findById(id).get();
-        var listOfStudentCoursesById = studentById.getCourse();
-        var listOfStudentCourses = new ArrayList<CourseResponseDto>();
-        for (Course course : listOfStudentCoursesById) {
-            listOfStudentCourses.add(
-                    CourseResponseDto
-                            .builder()
-                            .courseName(course.getCourseName())
-                            .student(course.getStudent())
-                            .id(course.getId())
-                            .build());
-        }
-        return listOfStudentCourses;
+    public CourseResponseDto getCourseResponseDto(long id) {
+        var courseEntity = courseRepository.findById(id).get();
+        CourseResponseDto courseResponseDto = CourseResponseDto
+                .builder()
+                .courseName(courseEntity.getCourseName())
+                .id(courseEntity.getId())
+                .build();
+        return courseResponseDto;
     }
+
 
     @Transactional
     @Override
@@ -103,28 +98,29 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
                 .build();
 
         long id = studentRepository.save(student).getId();
-        student.setStudentName("Khalid");
+        //student.setStudentName("Khalid");
         return id;
     }
 
     @Override
-    public long saveCourse(CourseRequestDto courseRequestDto, Long id) {
-        var student = studentRepository.findById(id);
+    public long saveCourse(CourseRequestDto courseRequestDto) {
 
         Course course = Course.builder()
                 .courseName(courseRequestDto.getCourseName())
                 .build();
-        course.setStudent(student.get());
-        student.get().getCourse().add(course);
         var num = courseRepository.save(course).getId();
         return num;
     }
 
-    //action needs
+    //TODO action needs
     @Override
     public void deleteCourseWithId(long studentId, long courseId) {
         var studentEntity = studentRepository.findById(studentId).get();
-        courseRepository.deleteByStudentAndId(studentEntity, courseId);
+        var courseEntity = courseRepository.findById(courseId).get();
+        studentEntity.getCourse().remove(courseEntity);
+        courseEntity.getStudent().getCourse().remove(courseEntity);
+        courseRepository.save(courseEntity);
+        studentRepository.save(studentEntity);
     }
 
     @Override
@@ -197,20 +193,21 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
         return studentRepository.save(student);
     }
 
+    //TODO need actions
     @Override
     public TeacherResponseDto addStudentById(long teacherId, long studentId) {
         return null;
     }
 
     //corrected, deletes just student and courses of student
-    //TODO need update Course entity to not delete course when deleting Student
     @Override
     public void deleteStudent(long id) {
         var entity = studentRepository.findById(id);
         var listOfCoursesForThisStudent = entity.get().getCourse();
         var listOfTeachers = entity.get().getTeachers();
         for (Course course : listOfCoursesForThisStudent) {
-            deleteCourse(course.getId());
+            course.setStudent(null);
+            courseRepository.save(course);
         }
         for (Teacher teachers : listOfTeachers) {
             teachers.getStudents().remove(entity.get());
@@ -222,5 +219,24 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
     @Override
     public void deleteCourse(long id) {
         courseRepository.delete(courseRepository.findById(id).get());
+    }
+
+
+    @Override
+    public CourseResponseDto addCourseToStudent(long studentId, long courseId) {
+        var studentEntity = studentRepository.findById(studentId).get();
+        var courseEntity = courseRepository.findById(courseId).get();
+
+        courseEntity.setStudent(studentEntity);
+        courseRepository.save(courseEntity);
+
+        var courseResponseDto =
+                CourseResponseDto
+                        .builder()
+                        .id(courseEntity.getId())
+                        .courseName(courseEntity.getCourseName())
+                        .student(courseEntity.getStudent())
+                        .build();
+        return courseResponseDto;
     }
 }

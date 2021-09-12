@@ -33,7 +33,6 @@ public class StudentController {
     }
 
     //delete students
-    //butun telebeleri silir amma course-lari silmemelidi mence
     @DeleteMapping("/students/{id}")
     public void deleteStudent(@PathVariable long id) {
         projectForJpaService.deleteStudent(id);

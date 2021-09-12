@@ -1,7 +1,6 @@
 package az.projects.projectforjpa.service;
 
 import az.projects.projectforjpa.dao.entity.Student;
-import az.projects.projectforjpa.dao.entity.Teacher;
 import az.projects.projectforjpa.dto.requestdto.CourseRequestDto;
 import az.projects.projectforjpa.dto.requestdto.StudentRequestDto;
 import az.projects.projectforjpa.dto.requestdto.TeacherRequestDto;
@@ -20,7 +19,7 @@ public interface ProjectForJpaService {
 
     StudentResponseDto getStudentById(long id);
 
-    List<CourseResponseDto> getCourseResponseDto(long id);
+    CourseResponseDto getCourseResponseDto(long id);
 
     long saveStudent(StudentRequestDto studentRequestDto);
 
@@ -28,7 +27,7 @@ public interface ProjectForJpaService {
 
     void deleteStudent(long id);
 
-    long saveCourse(CourseRequestDto courseRequestDto, Long id);
+    long saveCourse(CourseRequestDto courseRequestDto);
 
     //think again for return type of this abstract method
     void deleteCourseWithId(long studentId, long courseId);
@@ -43,6 +42,9 @@ public interface ProjectForJpaService {
 
     //add teacher to student
     Student addTeacherById(long teacherId, long studentId);
+
     //add student to teacher
     TeacherResponseDto addStudentById(long teacherId, long studentId);
+
+    CourseResponseDto addCourseToStudent(long studentId, long courseId);
 }
