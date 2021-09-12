@@ -140,14 +140,14 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
         return id;
     }
 
-    //deletes teachers from Student firstly, then Teacher itself
+    //deletes teachers from Student firstly, then Teacher itself by Teacher not id
     @Override
     public void deleteTeacher(long id) {
         var teacherById = teacherRepository.findById(id);
         List<Student> studentsOfTeacher = teacherById.get().getStudents();
 
         for (Student students : studentsOfTeacher) {
-            students.getTeachers().remove((int) id - 1);
+            students.getTeachers().remove(teacherById.get());
             studentRepository.save(students);
         }
         teacherRepository.deleteById(id);
@@ -202,21 +202,25 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
         return null;
     }
 
+    //corrected, deletes just student and courses of student
+    //TODO need update Course entity to not delete course when deleting Student
     @Override
     public void deleteStudent(long id) {
         var entity = studentRepository.findById(id);
         var listOfCoursesForThisStudent = entity.get().getCourse();
-
+        var listOfTeachers = entity.get().getTeachers();
         for (Course course : listOfCoursesForThisStudent) {
             deleteCourse(course.getId());
         }
-        studentRepository.delete(entity.get());
-
+        for (Teacher teachers : listOfTeachers) {
+            teachers.getStudents().remove(entity.get());
+            teacherRepository.save(teachers);
+        }
+        studentRepository.deleteById(id);
     }
 
     @Override
     public void deleteCourse(long id) {
         courseRepository.delete(courseRepository.findById(id).get());
     }
-
 }
