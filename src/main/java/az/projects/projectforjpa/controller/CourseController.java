@@ -43,10 +43,7 @@ public class CourseController {
         return service.addCourseToStudent(studentId, courseId);
     }
 
-    /**
-     * TODO correct this controller, because I do not know how to save after deleting chosen (by id) course
-     * TODO action : delete specified course of specified student /students/{id}/courses/{id}
-     */
+    //works correctly
     @DeleteMapping("/students/{studentId}/courses/{courseId}")
     public void deleteCourseWithId(@PathVariable long studentId,
                                    @PathVariable long courseId) {

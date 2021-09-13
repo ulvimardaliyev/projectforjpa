@@ -112,13 +112,13 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
         return num;
     }
 
-    //TODO action needs
+    //works correctly
     @Override
     public void deleteCourseWithId(long studentId, long courseId) {
         var studentEntity = studentRepository.findById(studentId).get();
         var courseEntity = courseRepository.findById(courseId).get();
         studentEntity.getCourse().remove(courseEntity);
-        courseEntity.getStudent().getCourse().remove(courseEntity);
+        courseEntity.setStudent(null);
         courseRepository.save(courseEntity);
         studentRepository.save(studentEntity);
     }

@@ -1,7 +1,9 @@
 package az.projects.projectforjpa;
 
+import az.projects.projectforjpa.dao.entity.Course;
 import az.projects.projectforjpa.dao.entity.Student;
 import az.projects.projectforjpa.dao.entity.Teacher;
+import az.projects.projectforjpa.dao.repository.CourseRepository;
 import az.projects.projectforjpa.dao.repository.StudentRepository;
 import az.projects.projectforjpa.dao.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +16,13 @@ import java.util.List;
 
 @SpringBootApplication
 public class ProjectforjpaApplication implements CommandLineRunner {
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Autowired
-    private  StudentRepository studentRepository;
+    private StudentRepository studentRepository;
     @Autowired
-    private  TeacherRepository teacherRepository;
+    private TeacherRepository teacherRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(ProjectforjpaApplication.class, args);
@@ -41,8 +45,13 @@ public class ProjectforjpaApplication implements CommandLineRunner {
         teacher.setSurname("Karimova");
         teacher.setStudents(students);
         student.setTeachers(teachers);
+        Course course = new Course();
+        course.setId(1);
+        course.setCourseName("Java Programming");
+        course.setStudent(student);
 
         studentRepository.save(student);
+        courseRepository.save(course);
         teacherRepository.save(teacher);
     }
 }
