@@ -29,4 +29,9 @@ public class StudentTeacherController {
             @PathVariable long studentId) {
         return service.addStudentById(teacherId, studentId);
     }
+
+    //TODO create a controller for the following requests
+    //TODO create a service method for the following requests
+    //@DeleteMapping("/students/{studentId}/teachers/{teacherId}")
+    //@DeleteMapping("/teachers/{teacherId}/students/{studentId}")
 }
