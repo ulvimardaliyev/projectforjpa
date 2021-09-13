@@ -193,10 +193,27 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
         return studentRepository.save(student);
     }
 
-    //TODO need actions
+    //works correctly
     @Override
     public TeacherResponseDto addStudentById(long teacherId, long studentId) {
-        return null;
+        var teacherEntity = teacherRepository.findById(teacherId).get();
+        var studentEntity = studentRepository.findById(studentId).get();
+        teacherEntity.getStudents().add(studentEntity);
+        teacherRepository.save(teacherEntity);
+        studentEntity.getTeachers().add(teacherEntity);
+        studentRepository.save(studentEntity);
+      /*  if (!teacherEntity.getStudents().contains(studentEntity)) {
+
+        }*/
+        var teacherResponseDto = TeacherResponseDto
+                .builder()
+                .id(teacherEntity.getId())
+                .age(teacherEntity.getAge())
+                .name(teacherEntity.getName())
+                .surname(teacherEntity.getSurname())
+                .students(teacherEntity.getStudents())
+                .build();
+        return teacherResponseDto;
     }
 
     //corrected, deletes just student and courses of student
