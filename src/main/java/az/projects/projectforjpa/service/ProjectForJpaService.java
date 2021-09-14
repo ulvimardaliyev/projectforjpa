@@ -47,4 +47,10 @@ public interface ProjectForJpaService {
     TeacherResponseDto addStudentById(long teacherId, long studentId);
 
     CourseResponseDto addCourseToStudent(long studentId, long courseId);
+
+    //Delete teacher from student
+    StudentResponseDto deleteTeacherFromStudent(long studentId, long teacherId);
+
+    //Delete student from teacher
+    TeacherResponseDto deleteStudentFromTeacher(long teacherId, long studentId);
 }

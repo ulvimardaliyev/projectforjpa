@@ -1,13 +1,11 @@
 package az.projects.projectforjpa.controller;
 
 import az.projects.projectforjpa.dao.entity.Student;
+import az.projects.projectforjpa.dto.responsedto.StudentResponseDto;
 import az.projects.projectforjpa.dto.responsedto.TeacherResponseDto;
 import az.projects.projectforjpa.service.ProjectForJpaService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -30,8 +28,19 @@ public class StudentTeacherController {
         return service.addStudentById(teacherId, studentId);
     }
 
-    //TODO create a controller for the following requests
-    //TODO create a service method for the following requests
-    //@DeleteMapping("/students/{studentId}/teachers/{teacherId}")
-    //@DeleteMapping("/teachers/{teacherId}/students/{studentId}")
+    //works correctly
+    @DeleteMapping("/students/{studentId}/teachers/{teacherId}")
+    public StudentResponseDto deleteTeacherFromStudent(
+            @PathVariable long studentId,
+            @PathVariable long teacherId) {
+        return service.deleteTeacherFromStudent(studentId, teacherId);
+    }
+
+    //works correctly
+    @DeleteMapping("/teachers/{teacherId}/students/{studentId}")
+    public TeacherResponseDto deleteStudentFromTeacher(
+            @PathVariable long teacherId,
+            @PathVariable long studentId) {
+        return service.deleteStudentFromTeacher(teacherId, studentId);
+    }
 }

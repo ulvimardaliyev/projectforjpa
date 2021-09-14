@@ -256,4 +256,39 @@ public class ProjectForJpaServiceImpl implements ProjectForJpaService {
                         .build();
         return courseResponseDto;
     }
+
+    @Override
+    public StudentResponseDto deleteTeacherFromStudent(long studentId, long teacherId) {
+        var studentEntity = studentRepository.findById(studentId).get();
+        var teacherEntity = teacherRepository.findById(teacherId).get();
+        studentEntity.getTeachers().remove(teacherEntity);
+        studentRepository.save(studentEntity);
+
+        var studentResponseDto =
+                StudentResponseDto
+                        .builder()
+                        .id(studentEntity.getId())
+                        .studentName(studentEntity.getStudentName())
+                        .course(studentEntity.getCourse())
+                        .teacher(studentEntity.getTeachers())
+                        .build();
+        return studentResponseDto;
+    }
+
+    @Override
+    public TeacherResponseDto deleteStudentFromTeacher(long teacherId, long studentId) {
+        var teacherEntity = teacherRepository.findById(teacherId).get();
+        var studentEntity = studentRepository.findById(studentId).get();
+        teacherEntity.getStudents().remove(studentEntity);
+        studentEntity.getTeachers().remove(teacherEntity);
+        teacherRepository.save(teacherEntity);
+        studentRepository.save(studentEntity);
+        return TeacherResponseDto.builder()
+                .id(teacherEntity.getId())
+                .age(teacherEntity.getAge())
+                .students(teacherEntity.getStudents())
+                .surname(teacherEntity.getSurname())
+                .name(teacherEntity.getName())
+                .build();
+    }
 }
